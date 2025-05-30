@@ -4,10 +4,9 @@
                  ---Russian Checkers---
  ver 4.x
 
- @author     Nifont.,  2004-2011
+ @author     Nifont.,  2004-2011-x
  @compiler   Turbo Pascal 7.2
- @site       http://serg-nifont/narod.ru
- @mail       serg.nifont@yandex.ru
+ @mail       evgeniy-korniloff@yandex.ru
  @CPU        >= 1.6 mg
  
  
@@ -923,6 +922,7 @@ begin
 
     if tmp > alpha then
     }
+    {0x001}
     tmp := -Search(-beta,-alpha,nextDepth,tmp_mv_i, tmp_mv_i);
 
 
@@ -1007,7 +1007,7 @@ var
  c0:TColor;
  tmp_mv_i, foo_mv_i:integer;
  save_do_reduction:boolean;
- fixed_depth:integer;
+ fixed_depth,c_depth:integer;
  peeck_depth:integer;
 { start_score:integer;}
  t:integer;
@@ -1166,70 +1166,24 @@ begin
   end else begin
 
 
-{00012}
-       tmp := -Search(-beta,-alpha,
-                    nextDepth-2,
-                    tmp_mv_i, tmp_mv_i);
-       if (tmp>alpha) then begin
-           tmp := -Main_Search(-beta,-alpha,
-                               nextDepth,
-                               tmp_mv_i, tmp_mv_i, -1);
-       end;
-
-(*
     tmp := -Search(-beta,-alpha,
                     fixed_depth,
                     tmp_mv_i, tmp_mv_i);
 
     peeck_depth := fixed_depth+1;
 
-    while (peeck_depth <= nextDepth)  do
+    while (peeck_depth <= nextDepth) 
+            and
+          (tmp>alpha) or (m_cnt=1) 
+          {or (peeck_depth <= (nextDepth div 2)))}
+    do
     begin
      tmp := -Main_Search(-beta,-alpha,
                          peeck_depth,
                          tmp_mv_i, tmp_mv_i, -1);
-
-
-
-     {EXACT SCORE}
-     if tmp < -infinity + max_ply then
-      if tmp < beta then
-       break;
-     if tmp > infinity - max_ply then
-      if tmp > alpha then
-       break;
-
-     {CUT}
-  if peeck_depth > (depth shr 2) then
-  begin
-
-     { SEARCH OTHER MOVE FOR CUT ?! }
-     if peeck_depth < nextDepth then
-      if tmp <= alpha then
-      begin
-
-       if treeCnt[ply+1]-treeCnt[ply] = 1 then
-         tmp := alpha + 1
-       else if find_cap[ply] then
-         tmp := alpha + 1
-       else
-         tmp := -Main_Search(-(alpha+1),-alpha,
-                            peeck_depth,
-                            tmp_mv_i, foo_mv_i, tmp_mv_i);
-      end;
-
-
-     if tmp <= alpha then
-        break;
-
-  end;
-
-
-
      inc(peeck_depth);
     end;
 
-  *)
   end;
 
 
